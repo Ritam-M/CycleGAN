@@ -34,6 +34,24 @@ class ReplayBuffer:
                     to_return.append(element)
         return Variable(torch.cat(to_return))
 
+def sample_images(batches_done):
+    """Saves a generated sample from the test set"""
+    imgs = next(iter(val_dataloader))
+    G_AB.eval()
+    G_BA.eval()
+    real_A = Variable(imgs["A"].type(Tensor))
+    fake_B = G_AB(real_A)
+    real_B = Variable(imgs["B"].type(Tensor))
+    fake_A = G_BA(real_B)
+    # Arange images along x-axis
+    real_A = make_grid(real_A, nrow=5, normalize=True)
+    real_B = make_grid(real_B, nrow=5, normalize=True)
+    fake_A = make_grid(fake_A, nrow=5, normalize=True)
+    fake_B = make_grid(fake_B, nrow=5, normalize=True)
+    # Arange images along y-axis
+    image_grid = torch.cat((real_A, fake_B, real_B, fake_A), 1)
+    save_image(image_grid, "images/%s/%s.png" % (opt.dataset_name, batches_done), normalize=False)
+
 class LambdaLR:
     def __init__(self, n_epochs, offset, decay_start_epoch):
         assert (n_epochs - decay_start_epoch) > 0, "Decay must start before the training session ends!"
