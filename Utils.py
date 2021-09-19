@@ -7,6 +7,11 @@ import torch
 import numpy as np
 from torchvision.utils import save_image
 
+def to_rgb(image):
+    rgb_image = Image.new("RGB", image.size)
+    rgb_image.paste(image)
+    return rgb_image
+
 class ReplayBuffer:
     def __init__(self, max_size=50):
         assert max_size > 0, "Empty buffer or trying to create a black hole. Be careful."
