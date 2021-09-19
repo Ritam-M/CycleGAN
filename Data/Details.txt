@@ -1,0 +1,5 @@
+Put the Data in the following format:
+/A/train/
+/A/test/
+/B/train/
+/B/test/
